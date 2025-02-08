@@ -9,7 +9,7 @@ import java.util.function.Function;
 
 public class DatabaseConnector {
     private static DatabaseConnector instance;
-    private static final String connectionString = "jdbc:sqlite:src/main/resources/company.db";
+    private static final String CONNECTION_STRING = "jdbc:sqlite:src/main/resources/company.db";
 
     private DatabaseConnector() {
         //Private constructor for singleton
@@ -21,7 +21,7 @@ public class DatabaseConnector {
     }
 
     public <T> T executeStaement(Function<Statement, T> statementTFunction) {
-        try (Connection connection = DriverManager.getConnection(connectionString)) {
+        try (Connection connection = DriverManager.getConnection(CONNECTION_STRING)) {
             return statementTFunction.apply(connection.createStatement());
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -29,7 +29,7 @@ public class DatabaseConnector {
     }
 
     public <T> T executePreparedStaement(String sql, Function<PreparedStatement, T> statementConsumer) {
-        try (Connection connection = DriverManager.getConnection(connectionString)) {
+        try (Connection connection = DriverManager.getConnection(CONNECTION_STRING)) {
             return statementConsumer.apply(connection.prepareStatement(sql));
         } catch (SQLException e) {
             throw new RuntimeException(e);
