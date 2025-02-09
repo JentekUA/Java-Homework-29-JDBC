@@ -1,5 +1,9 @@
 package com.example.app.database;
 
+import lombok.SneakyThrows;
+
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -9,14 +13,19 @@ import java.util.function.Function;
 
 public class DatabaseConnector {
     private static DatabaseConnector instance;
-    private static final String CONNECTION_STRING = "jdbc:sqlite:src/main/resources/company.db";
+    private static final String RESOURCES_FOLDER = "src/main/resources";
+    private static final String CONNECTION_STRING = "jdbc:sqlite:%s/company.db".formatted(RESOURCES_FOLDER);
 
+    @SneakyThrows
     private DatabaseConnector() {
-        //Private constructor for singleton
+        var resources = Path.of(RESOURCES_FOLDER);
+        if (!Files.exists(resources))
+            Files.createDirectory(resources);
+
     }
 
     public static DatabaseConnector getInstance() {
-        if(instance == null) instance = new DatabaseConnector();
+        if (instance == null) instance = new DatabaseConnector();
         return instance;
     }
 
